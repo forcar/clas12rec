@@ -13,6 +13,9 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.geom.GeneralPath;
+import java.util.ArrayList;
+import java.util.List;
+
 import org.jlab.detector.base.DetectorDescriptor;
 import org.jlab.detector.base.DetectorType;
 
@@ -21,24 +24,28 @@ import org.jlab.geom.prim.Path3D;
 /**
  *
  * @author gavalian
+ * @version Modified by lcsmith for use with ECMon
  */
 public class DetectorShape2D {
     
     DetectorDescriptor  desc = new DetectorDescriptor();
     Path3D              shapePath = new Path3D();
-    int                 colorRed    = 80;
-    int                 colorGreen  = 80;
-    int                 colorBlue   = 220;
+    
+    int                 colorRed    = 213;
+    int                 colorGreen  = 246;
+    int                 colorBlue   = 230;
     
     int                 colorAlpha  = 255;
     int                 counter     = 0;
     int                 lineWidth   = 2;
+    
     String              shapeTitle  = "";
     
     private             DetectorShape2D  activeShape = null;
+    
+    List<DetectorListener>    detectorListeners = new ArrayList<DetectorListener>();
         
-    public DetectorShape2D(){
-        
+    public DetectorShape2D(){     
     }
     
     public DetectorShape2D(DetectorType type, int sector, int layer, int component){
@@ -48,6 +55,9 @@ public class DetectorShape2D {
                 type.getName(),sector,layer,component);
     }
     
+    public void addDetectorListener(DetectorListener lt){
+        this.detectorListeners.add(lt);
+    }
     
     public DetectorDescriptor  getDescriptor(){ return desc;}
     public Path3D              getShapePath(){ return shapePath;}
@@ -130,15 +140,11 @@ public class DetectorShape2D {
         }
     }
     
-    public void reset(){
-        this.counter = 0;
-    }
+    public void reset() {this.counter = 0;}
     
-    public int getCounter(){ return counter; }
-    public DetectorShape2D setCounter(int c){
-        this.counter = c;
-        return this;
-    }
+    public int getCounter() {return counter;}
+    
+    public DetectorShape2D setCounter(int c) {this.counter = c ; return this;}
     
     public void setColorByStatus(int status){
         int rs = status;
